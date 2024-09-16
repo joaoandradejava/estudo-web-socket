@@ -2,6 +2,7 @@ package com.estudo.joaoandrade.domain.model;
 
 import com.estudo.joaoandrade.domain.model.enumeration.Permissao;
 import jakarta.persistence.*;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.HashSet;
 import java.util.Objects;
@@ -29,7 +30,7 @@ public class Usuario {
 
     private Boolean isAtivo = Boolean.TRUE;
 
-    @ElementCollection(targetClass = Permissao.class)
+    @ElementCollection(targetClass = Permissao.class, fetch = FetchType.EAGER)
     @CollectionTable(name = "usuario_permissoes", joinColumns = @JoinColumn(name = "usuario_id"))
     @Enumerated(EnumType.STRING)
     private Set<Permissao> permissoes = new HashSet<>();
@@ -101,5 +102,9 @@ public class Usuario {
     @Override
     public int hashCode() {
         return Objects.hashCode(id);
+    }
+
+    public boolean isSenhaCorreta(String senha, PasswordEncoder passwordEncoder) {
+        return passwordEncoder.matches(senha, this.senha);
     }
 }

@@ -6,7 +6,6 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
-import java.util.List;
 import java.util.stream.Collectors;
 
 public class UsuarioLogado implements UserDetails {
@@ -14,6 +13,7 @@ public class UsuarioLogado implements UserDetails {
     private final String nome;
     private final String username;
     private final String email;
+    private final String senha;
     private final Collection<? extends GrantedAuthority> authorities;
 
     public UsuarioLogado(Usuario usuario) {
@@ -21,22 +21,23 @@ public class UsuarioLogado implements UserDetails {
         this.nome = usuario.getNome();
         this.username = usuario.getUsername();
         this.email = usuario.getEmail();
+        this.senha = usuario.getSenha();
         this.authorities = usuario.getPermissoes().stream().map(p -> new SimpleGrantedAuthority(p.getRole())).collect(Collectors.toList());
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of();
+        return authorities;
     }
 
     @Override
     public String getPassword() {
-        return this.getPassword();
+        return senha;
     }
 
     @Override
     public String getUsername() {
-        return this.getUsername();
+        return username;
     }
 
     @Override
